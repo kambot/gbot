@@ -29,31 +29,17 @@ class GBot(QMainWindow):
         self.root = os.path.dirname(os.path.abspath(__file__))  + "\\"
         self.support = self.root + "support\\"
 
-        # these are the default paths
-        # self.output = self.root + "output\\"
-        # self.gbt = self.root + "gbt\\"
-        # self.scripts = self.root + "scripts\\"
-
-        # if not(os.path.isdir(self.gbt)):
-        #     os.makedirs(self.gbt)
-        # if not(os.path.isdir(self.output)):
-        #     os.makedirs(self.output)
-        # if not(os.path.isdir(self.scripts)):
-        #     os.makedirs(self.scripts)
-
 
         self.pypath = which("python.exe")
         if self.pypath == None:
-            self.pypath = r"\\S-filesrv-p-1\ERM\DEPO\SOFTWARE\SUPPORT\Anaconda\python.exe"
+            self.pypath = r"python.exe"
 
         self.pywpath = which("pythonw.exe")
         if self.pywpath == None:
-            self.pywpath = r"\\S-filesrv-p-1\ERM\DEPO\SOFTWARE\SUPPORT\Anaconda\pythonw.exe"
+            self.pywpath = r"pythonw.exe"
 
-        # self.gbts = []#[x for x in os.listdir(self.gbt) if ".gbt" in x.lower()]
         self.gbts_dict = {}
         self.gbts_dict2 = {}#self.gbts_dict.fromkeys([], 0)
-        # self.gbts_dict2_prev = self.gbts_dict.fromkeys([], 0)
 
         self.user = getuser()
 
