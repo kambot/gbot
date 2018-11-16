@@ -74,34 +74,35 @@ class GBot(QMainWindow):
                 lines = f.read()
             self.inp = lines
 
-        self.readme_path = self.appd + "README.txt"
-        self.readme_contents = '''GBot
--------------------------------------------------------------------------------------------------------------------------------------------
-Written by Kameron Penn
-Inspired by Chris Rose
+        self.readme_path = self.root + "README.txt"
+        # self.readme_path = self.appd + "README.txt"
+        # self.readme_contents = '''GBot
+        # -------------------------------------------------------------------------------------------------------------------------------------------
+        # Written by Kameron Penn
+        # Inspired by Chris Rose
 
-Store scripts in scripts folder.
+        # Store scripts in scripts folder.
 
-Schedule the scripts in the gbt folder with '.gbt' files.
+        # Schedule the scripts in the gbt folder with '.gbt' files.
 
-gbt syntax:
-format_string ; script_file_name ; notification
+        # gbt syntax:
+        # format_string ; script_file_name ; notification
 
-format_string:
-    yyyy.mm.dd.HH.MM:SS (leave as letters to be variable)
+        # format_string:
+        #     yyyy.mm.dd.HH.MM:SS (leave as letters to be variable)
 
-notification:
-    0 for nothing
-    1 popup display
-    2 tray notification
+        # notification:
+        #     0 for nothing
+        #     1 popup display
+        #     2 tray notification
 
-use a # for comments
+        # use a # for comments
 
-examples:
-    yyyy.mm.dd.HH.MM:01 ; example.cmd ; 1  # run example.cmd on the first second of every minute with a popup notification
-    2018.04.03.HH.00:00 ; example.cmd ; 0  # run example.cmd on 4/3/2018 at the start of every hour
+        # examples:
+        #     yyyy.mm.dd.HH.MM:01 ; example.cmd ; 1  # run example.cmd on the first second of every minute with a popup notification
+        #     2018.04.03.HH.00:00 ; example.cmd ; 0  # run example.cmd on 4/3/2018 at the start of every hour
 
-'''
+        # '''
 
         self.pt = ""
         self.log = ""
@@ -767,8 +768,8 @@ examples:
         self.log = ""
 
     def view_readme(self):
-        with open(self.readme_path,'w') as f:
-            f.write(self.readme_contents)
+        # with open(self.readme_path,'w') as f:
+        #     f.write(self.readme_contents)
         sp = Popen(["notepad.exe", self.readme_path], shell=True,stdin=None, stdout=None, stderr=None, close_fds=True)
 
     def copy_tasks(self):
