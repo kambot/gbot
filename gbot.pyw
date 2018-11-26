@@ -586,7 +586,8 @@ class GBot(QMainWindow):
             # if self.task_count != 1:
             #     string += "s"
 
-            string = "GBot" + " " + self.get_memory_usage() + "\n" + str(self.task_count) + " task"
+            # string = "GBot" + " " + self.get_memory_usage() + "\n" + str(self.task_count) + " task"
+            string = "GBot" + "\n" + str(self.task_count) + " task"
             if self.task_count != 1:
                 string += "s"
             self.tray.setToolTip(string)
