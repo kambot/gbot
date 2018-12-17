@@ -438,13 +438,11 @@ class GBot(QMainWindow):
 
                 else:
 
-                    out_scrpt = self.output + scrpt
-                    if not os.path.isdir(out_scrpt):
-                        os.mkdir(out_scrpt)
-                    output_temp = out_scrpt + "\\" + sdate.replace(":",".") +"_"+ str(time()) + ".txt"
-
-
                     if logging:
+                        out_scrpt = self.output + scrpt
+                        if not os.path.isdir(out_scrpt):
+                            os.mkdir(out_scrpt)
+                        output_temp = out_scrpt + "\\" + sdate.replace(":",".") +"_"+ str(time()) + ".txt"
                         cmd_logging = [">>",output_temp]
                     else:
                         cmd_logging = []
