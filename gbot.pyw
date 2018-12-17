@@ -248,13 +248,13 @@ class GBot(QMainWindow):
         sct = str(self.ct)
         self.cts = mktime(datetime.strptime(self.ct,"%Y.%m.%d.%H.%M:%S").timetuple())
 
-        def range2(a,b):
-            lst = [a]
-            while True:
-                new = lst[-1] + 1
-                lst += [new]
-                if new == b:
-                    return lst
+        # def range2(a,b):
+        #     lst = [a]
+        #     while True:
+        #         new = lst[-1] + 1
+        #         lst += [new]
+        #         if new == b:
+        #             return lst
 
         from numpy import arange, array
 
@@ -267,10 +267,14 @@ class GBot(QMainWindow):
         cS = ct_lst[4].split(':')[1]
 
         years = [cy,str(int(cy)+1)]
-        months = [str(x).zfill(2) for x in range2(1,12)]
-        days = [str(x).zfill(2) for x in range2(1,31)]
-        hours = [str(x).zfill(2) for x in range2(0,23)]
-        mins = [str(x).zfill(2) for x in range2(0,59)]
+        # months = [str(x).zfill(2) for x in range2(1,12)]
+        # days = [str(x).zfill(2) for x in range2(1,31)]
+        # hours = [str(x).zfill(2) for x in range2(0,23)]
+        # mins = [str(x).zfill(2) for x in range2(0,59)]
+        months = [str(x).zfill(2) for x in range(1,12+1)]
+        days = [str(x).zfill(2) for x in range(1,31+1)]
+        hours = [str(x).zfill(2) for x in range(0,23+1)]
+        mins = [str(x).zfill(2) for x in range(0,59+1)]
         secs = [cS,'00']
 
         # need to check the current, next, and first
@@ -306,7 +310,9 @@ class GBot(QMainWindow):
         for task in self.scheds:
             task = task.split("#")[0].strip()
             scrpt = task.split(';')[1].strip()
-            notification = task.split(';')[2].split("#")[0].strip()
+            # notification = task.split(';')[2].split("#")[0].strip()
+            notification = task.split(';')[2].strip()
+            logging = task.split(';')[3].split("#")[0].strip()
 
             st = task.strip().split(';')[0].replace('@','').strip()
             # st_lst = st.split('.')
@@ -316,6 +322,11 @@ class GBot(QMainWindow):
             # sH = st_lst[3]
             # sM = st_lst[4].split(':')[0]
             # sS = st_lst[4].split(':')[1]
+
+            if logging == '1':
+                logging = True
+            else:
+                logging = False
 
             if self.recalc or not st in self.dates.keys():
         
@@ -432,13 +443,19 @@ class GBot(QMainWindow):
                         os.mkdir(out_scrpt)
                     output_temp = out_scrpt + "\\" + sdate.replace(":",".") +"_"+ str(time()) + ".txt"
 
+
+                    if logging:
+                        cmd_logging = [">>",output_temp]
+                    else:
+                        cmd_logging = []
+
                     scrpt_ext = scrpt.split(".")[-1]
                     if scrpt_ext == "py":
-                        command = [self.pypath, spath,">>",output_temp]
+                        command = [self.pypath, spath] + cmd_logging
                     elif scrpt_ext == "pyw":
-                        command = [self.pywpath, spath,">>",output_temp]
+                        command = [self.pywpath, spath] + cmd_logging
                     else:
-                        command = [spath,">>",output_temp]
+                        command = [spath] + cmd_logging
 
                     # initate the script
                     Popen(command, shell=True,stdin=None, stdout=None, stderr=None, close_fds=True)
@@ -641,7 +658,7 @@ class GBot(QMainWindow):
     def is_valid(self,string):
         if string.strip() != "":
             if string.strip()[0] != "#":
-                if len(string.split(";")) == 3 and len(string.split(".")) >= 6 and len(string.split(":")) >= 2:
+                if len(string.split(";")) == 4 and len(string.split(".")) >= 6 and len(string.split(":")) >= 2:
                     if len(string.strip()) > 22:
                         splt1 = string.strip().split(";")[0].strip()
                         if len(splt1) == 19:
