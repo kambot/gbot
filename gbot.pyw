@@ -54,7 +54,7 @@ class GBot(QMainWindow):
         self.path_mgmt(update=False)
 
         # used for the input editor
-        self.inp = '''# example task\n# yyyy.mm.dd.HH.MM:00; example.cmd; 0\n'''
+        self.inp = '''# example task\n# yyyy.mm.dd.HH.MM:00; example.cmd; 0; 0\n'''
         if os.path.isfile(self.appd_t):
             with open(self.appd_t,'r') as f:
                 lines = f.read()

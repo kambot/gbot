@@ -20,7 +20,7 @@ notification:
 
 logging:
     0 for False (don't log output)
-    0 for True
+    1 for True
 
 
 use a # for comments
