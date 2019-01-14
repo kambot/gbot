@@ -50,6 +50,7 @@ class GBot(QMainWindow):
         self.appd_t = self.appd + "TASKS"
         self.paths = self.appd + "PATHS"
         self.select_path = self.appd + "SELECTIONS"
+        self.font_path = self.appd + "FONT"
 
         self.path_mgmt(update=False)
 
@@ -98,6 +99,8 @@ class GBot(QMainWindow):
         self.dates = {} # store the task dates
         self.save_file = 0
         self.scheds = []
+        self.font_choice = ""
+        self.fonts = ['Consolas','Arial']
 
         self.sid = 60*60*24
 
@@ -106,9 +109,11 @@ class GBot(QMainWindow):
 
         self.main_icon = QIcon(self.support + r"green_robot.png")
 
-        # self.setFont(QFont('Palatino Linotype', 10))
-        self.setFont(QFont('Arial', 10))
-        QToolTip.setFont(QFont('Arial', 10))
+        # self.setFont(QFont('Palatino Linotype', 10))        
+        # self.font_choice = self.fonts[0]
+        # self.setFont(QFont(self.font_choice, 10))
+        # QToolTip.setFont(QFont(self.font_choice, 10))
+        self.update_font(update = False)
 
         # self.setToolTip('This is a <b>QWidget</b> widget')
         self.in_tray = False
@@ -221,6 +226,34 @@ class GBot(QMainWindow):
         mem = " ".join(out.split(" ")[-2:])
         return mem
 
+    def update_font(self, update):
+        # if self.font_choice == "":
+            # self.font_choice = self.fonts[0]
+
+        if not os.path.isfile(self.font_path):
+            if self.font_choice == "":
+                font_choice = self.fonts[0]
+            with open(self.font_path,'w') as f:
+                f.write(font_choice)
+        
+        if not update:
+            with open(self.font_path,'r') as f:
+                lines = f.readlines()
+            
+            lines = [x.strip().lower() for x in lines if x.strip() != ""]
+            matches = [x for x in lines if x in [y.lower() for y in self.fonts]]
+            if len(matches) > 0:
+                match = matches[0]
+                self.font_choice = self.fonts[[y.lower() for y in self.fonts].index(match)]
+            else:
+                self.font_choice = self.fonts[0]
+
+        else:
+            with open(self.font_path,'w') as f:
+                f.write(self.font_choice)
+
+        self.setFont(QFont(self.font_choice, 10))
+        QToolTip.setFont(QFont(self.font_choice, 10))
 
     def updater(self):
         t0 = time()
@@ -819,7 +852,7 @@ class GBot(QMainWindow):
         self.selectAct.setStatusTip('Select all gbt files')
         self.selectAct.triggered.connect(self.select_all_gbt)
 
-        self.unselectAct = QAction('Unselect All', self)        
+        self.unselectAct = QAction('Unselect All', self)
         self.unselectAct.setStatusTip('Unselect all gbt files')
         self.unselectAct.triggered.connect(self.unselect_all_gbt)
 
@@ -1044,11 +1077,14 @@ class GBot_Preferences(QWidget):
         self.setFont(gui.font())
         self.setWindowTitle('GBot Preferences') 
         self.setWindowIcon(self.main_icon)
-        
+
+        # gui.fonts
+        # gui.font_choice       
 
         self.lbl1 = QLabel('gbt path:', self)
         self.lbl2 = QLabel('scripts path:', self)
         self.lbl3 = QLabel('output path:', self)
+        self.lbl4 = QLabel('font:', self)
 
         self.line_gbt = QLineEdit()
         self.line_gbt.setText(gui.gbt)
@@ -1056,6 +1092,16 @@ class GBot_Preferences(QWidget):
         self.line_scripts.setText(gui.scripts)
         self.line_output = QLineEdit()
         self.line_output.setText(gui.output)
+
+
+        self.comboBox = QComboBox(self)
+        for font in gui.fonts:
+            self.comboBox.addItem(font)
+        # self.comboBox.activated[str].connect(self.format_choice)
+        index = self.comboBox.findText(gui.font_choice, Qt.MatchFixedString)
+        if index >= 0:
+            self.comboBox.setCurrentIndex(index)
+        # self.comboBox.setToolTip('Select the format to convert to')
 
         self.btn = QPushButton('Save', self)
         self.btn.clicked.connect(self.save_prefs)
@@ -1065,13 +1111,16 @@ class GBot_Preferences(QWidget):
         self.grid = QGridLayout()
         self.grid.setSpacing(10)
 
-        self.grid.addWidget(self.lbl1, 0, 0)
-        self.grid.addWidget(self.line_gbt, 1, 0)
-        self.grid.addWidget(self.lbl2, 2, 0)
-        self.grid.addWidget(self.line_scripts, 3, 0)
-        self.grid.addWidget(self.lbl3, 4, 0)
-        self.grid.addWidget(self.line_output, 5, 0)
-        self.grid.addWidget(self.btn, 7, 0)
+        cspan = 3
+        self.grid.addWidget(self.lbl1, 0, 0,1,cspan)
+        self.grid.addWidget(self.line_gbt, 1, 0,1,cspan)
+        self.grid.addWidget(self.lbl2, 2, 0,1,cspan)
+        self.grid.addWidget(self.line_scripts, 3, 0,1,cspan)
+        self.grid.addWidget(self.lbl3, 4, 0,1,cspan)
+        self.grid.addWidget(self.line_output, 5, 0,1,cspan)
+        self.grid.addWidget(self.lbl4, 6, 0,1,cspan)
+        self.grid.addWidget(self.comboBox, 7, 0,1,1)
+        self.grid.addWidget(self.btn, 8, 0,1,1)
 
         self.setLayout(self.grid)
 
@@ -1080,7 +1129,7 @@ class GBot_Preferences(QWidget):
         self.show()
     
     def save_prefs(self):
-        import os
+        # import os
 
         gbt = self.line_gbt.text()
         if gbt.strip() == "":
@@ -1096,11 +1145,16 @@ class GBot_Preferences(QWidget):
         if output.strip() == "":
             return
         gui.output = output
+
+        gui.font_choice = self.comboBox.currentText()
+        gui.update_font(update=True)
         
         # self.done(0)
         gui.path_mgmt(update=True)
         gui.change_status("Updated preferences")
         self.close()
+
+        
 
 
 class GBot_Message(QWidget):

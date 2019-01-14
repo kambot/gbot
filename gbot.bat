@@ -1,6 +1,5 @@
 @echo off
-cls
-
 start pythonw.exe gbot.pyw
-
+::python.exe gbot.pyw
+::pause
 
