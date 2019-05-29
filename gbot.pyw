@@ -39,7 +39,7 @@ class GBot(QMainWindow):
             self.pywpath = r"pythonw.exe"
 
         self.gbts_dict = {}
-        self.gbts_dict2 = {}#self.gbts_dict.fromkeys([], 0)
+        self.gbts_dict2 = {}
 
         self.user = getuser()
 
@@ -62,34 +62,6 @@ class GBot(QMainWindow):
             self.inp = lines
 
         self.readme_path = self.root + "README.txt"
-        # self.readme_path = self.appd + "README.txt"
-        # self.readme_contents = '''GBot
-        # -------------------------------------------------------------------------------------------------------------------------------------------
-        # Written by Kameron Penn
-        # Inspired by Chris Rose
-
-        # Store scripts in scripts folder.
-
-        # Schedule the scripts in the gbt folder with '.gbt' files.
-
-        # gbt syntax:
-        # format_string ; script_file_name ; notification
-
-        # format_string:
-        #     yyyy.mm.dd.HH.MM:SS (leave as letters to be variable)
-
-        # notification:
-        #     0 for nothing
-        #     1 popup display
-        #     2 tray notification
-
-        # use a # for comments
-
-        # examples:
-        #     yyyy.mm.dd.HH.MM:01 ; example.cmd ; 1  # run example.cmd on the first second of every minute with a popup notification
-        #     2018.04.03.HH.00:00 ; example.cmd ; 0  # run example.cmd on 4/3/2018 at the start of every hour
-
-        # '''
 
         self.pt = ""
         self.log = ""
@@ -109,13 +81,8 @@ class GBot(QMainWindow):
 
         self.main_icon = QIcon(self.support + r"green_robot.png")
 
-        # self.setFont(QFont('Palatino Linotype', 10))        
-        # self.font_choice = self.fonts[0]
-        # self.setFont(QFont(self.font_choice, 10))
-        # QToolTip.setFont(QFont(self.font_choice, 10))
         self.update_font(update = False)
 
-        # self.setToolTip('This is a <b>QWidget</b> widget')
         self.in_tray = False
         self.was_tray = False
         self.task_count = 0
@@ -131,7 +98,6 @@ class GBot(QMainWindow):
         self.chkBoxLayout.setAlignment(Qt.AlignTop)
         # checkbox container widget       
         self.cwidget = QWidget()  
-        # self.cwidget.setStyleSheet(""".QWidget {background-color: rgb(255, 255, 255);}""")
         self.cwidget.setLayout(self.chkBoxLayout)
         # checkbox scroll area, gives scrollable view on widget
         self.scroll = QScrollArea()
@@ -152,8 +118,6 @@ class GBot(QMainWindow):
         self.lbl5 = QLabel('Task Editor', self)
 
         def make_disabled(_obj):
-            # _obj.setDisabled(True)
-            # _obj.setStyleSheet("background-color: rgb(255, 255, 255); font-size: 10pt; font-family: Arial; color: rgb(0,0,0)")
             _obj.setReadOnly(True)
 
         self.text_countdown = QTextEdit()
@@ -170,20 +134,14 @@ class GBot(QMainWindow):
         self.highlighter = Highlighter(self.text_log.document())
         self.text_log.setToolTip('This window displays logs of when tasks were initiated.')
 
-        # self.text_editor = QTextEdit()
         self.text_editor = FileEdit()
         self.text_editor.setPlainText(self.inp)
         self.text_editor.setToolTip('Use this window to create tasks outside of a gbt file.')
-        self.text_editor.installEventFilter(self)
-        # self.text_editor.selectionChanged.connect(self.handleSelectionChanged)
-        # self.text_editor.viewportEvent.connect(self.dothing)
-
-        
+        self.text_editor.installEventFilter(self)       
         
 
         self.grid = QGridLayout()
         self.grid.setSpacing(10)
-
 
         self.grid.addWidget(self.lbl1, 0, 0)
         self.grid.addWidget(self.scroll, 1, 0, 3, 1)
@@ -211,14 +169,10 @@ class GBot(QMainWindow):
         self.center()
 
     def update_countdown(self):
-        # self.lbl2.setText("Countdown\nCurrent Time: " + strftime("%Y.%m.%d.%H.%M:%S"))
-        # self.lbl2.setText("Current Time: " + strftime("%Y.%m.%d.%H.%M:%S") + "\nCountdown")
         self.lbl1.setText("Time: " + strftime("%Y.%m.%d.%H.%M:%S") + "\nSelect .gbt files")
-
 
     def update_task_label(self):
         self.lbl3.setText("\nTasks (" + str(self.task_count) + ")")
-        # self.lbl3 = QLabel('\nTasks', self)
 
     def get_memory_usage(self):
         out = os.popen("tasklist | findstr " + str(self.pid)).read()
@@ -227,8 +181,6 @@ class GBot(QMainWindow):
         return mem
 
     def update_font(self, update):
-        # if self.font_choice == "":
-            # self.font_choice = self.fonts[0]
 
         if not os.path.isfile(self.font_path):
             if self.font_choice == "":
@@ -262,32 +214,16 @@ class GBot(QMainWindow):
         self.update_countdown()
         self.tray_tool_tip()
         self.update_task_label()
-        # mem = self.get_memory_usage()
         
-
-
         self.save_file += 1
         if self.save_file == 100:
             with open(self.appd_t,'w') as f:
                 f.write(self.text_editor.toPlainText())
-            # print("saved")
             self.save_file = 0
         
-
-
-        
-
         self.ct = strftime("%Y.%m.%d.%H.%M:%S")
         sct = str(self.ct)
         self.cts = mktime(datetime.strptime(self.ct,"%Y.%m.%d.%H.%M:%S").timetuple())
-
-        # def range2(a,b):
-        #     lst = [a]
-        #     while True:
-        #         new = lst[-1] + 1
-        #         lst += [new]
-        #         if new == b:
-        #             return lst
 
         from numpy import arange, array
 
@@ -300,10 +236,6 @@ class GBot(QMainWindow):
         cS = ct_lst[4].split(':')[1]
 
         years = [cy,str(int(cy)+1)]
-        # months = [str(x).zfill(2) for x in range2(1,12)]
-        # days = [str(x).zfill(2) for x in range2(1,31)]
-        # hours = [str(x).zfill(2) for x in range2(0,23)]
-        # mins = [str(x).zfill(2) for x in range2(0,59)]
         months = [str(x).zfill(2) for x in range(1,12+1)]
         days = [str(x).zfill(2) for x in range(1,31+1)]
         hours = [str(x).zfill(2) for x in range(0,23+1)]
@@ -320,16 +252,8 @@ class GBot(QMainWindow):
         M = [x % len(mins) for x in mins.index(cM) + arange(0,2)]
         M = list(set(array(mins)[M].tolist() + [mins[0]]))
 
-        # dct = {}
-        # dct["SS"] = secs
-        # dct["MM"] = M
-        # dct["HH"] = H
-        # dct["dd"] = d
-        # dct["mm"] = m
-        # dct["yyyy"] = years
 
         msgs = []
-        # logs = []
         window_msgs = []
         tray_msgs = []
         added_log = False
@@ -343,18 +267,10 @@ class GBot(QMainWindow):
         for task in self.scheds:
             task = task.split("#")[0].strip()
             scrpt = task.split(';')[1].strip()
-            # notification = task.split(';')[2].split("#")[0].strip()
             notification = task.split(';')[2].strip()
             logging = task.split(';')[3].split("#")[0].strip()
 
             st = task.strip().split(';')[0].replace('@','').strip()
-            # st_lst = st.split('.')
-            # sy = st_lst[0]
-            # sm = st_lst[1]
-            # sd = st_lst[2]
-            # sH = st_lst[3]
-            # sM = st_lst[4].split(':')[0]
-            # sS = st_lst[4].split(':')[1]
 
             if logging == '1':
                 logging = True
@@ -420,11 +336,7 @@ class GBot(QMainWindow):
             elif sts == "complete":
                 msg = "complete" + " "*9 + scrpt
 
-            else:
-
-                # sts = stimes[0] + self.cts
-                # sdate = str(datetime.fromtimestamp(sts).strftime("%Y.%m.%d.%H.%M:%S"))
- 
+            else: 
                 dd = (sts - self.cts)/(self.sid)
                 dr = int(dd)
                 
@@ -458,13 +370,10 @@ class GBot(QMainWindow):
                     ppmsg = scrpt + " failed!"
 
                     if notification == "1":
-                        # self.show_message(ppmsg)
                         window_msgs += [ppmsg]
                     elif notification == "2" and self.in_tray:
                         tray_msgs += [ppmsg]
-                        # self.show_tray_message(ppmsg)
 
-                    # self.log += "[E]" + sct + " " + task + "\n"
                     if self.do_log:
                         self.log = "[E] " + sct + " - " + scrpt + "\n" + self.log
                         added_log = True
@@ -488,14 +397,13 @@ class GBot(QMainWindow):
                     else:
                         command = [spath] + cmd_logging
 
-                    # initate the script
+                    # initiate the script
                     Popen(command, shell=True,stdin=None, stdout=None, stderr=None, close_fds=True)
                     if st in self.dates:
                         del self.dates[st]
      
 
                     ppmsg = scrpt + " initiated!"
-                    # emsg = "Task: " + task + "\nInitiated: " + sct
 
                     if self.in_tray:
                          self.change_tray_icon(QIcon(self.support + r"blue_robot.png"))
@@ -505,16 +413,12 @@ class GBot(QMainWindow):
                     elif notification == "2" and self.in_tray:
                         tray_msgs += [ppmsg]
 
-                    # with open(root + "log.txt", 'a') as f:
-                    #     f.write(task + " initiated " + sct + "\n")
-
-                    # self.log +=  sct + " - " + task + "\n"
                     if self.do_log:
                         self.log = "[S] " + sct + " - " + scrpt + "\n" + self.log
                         added_log = True
 
-
         # [end loop through the scheduled tasks]
+
         self.pt = sct
         
         if tray_msgs != []:
@@ -535,10 +439,6 @@ class GBot(QMainWindow):
             self.text_log.setPlainText(self.log + self.text_log.toPlainText())
             self.text_log.verticalScrollBar().setValue(cpos)
         
-        # if self.recalc:
-        #     print("recalc",time() - t0)
-        # else:
-        #     print("no recalc",time() - t0)
 
     def get_selection(self):
         cursor = self.text_editor.textCursor()
@@ -603,8 +503,6 @@ class GBot(QMainWindow):
 
                 flen = len(rtxt)
                 self.text_editor.setPlainText(rtxt)
-
-      
     
                 cursor = self.text_editor.textCursor()
                 
@@ -621,20 +519,9 @@ class GBot(QMainWindow):
 
         return 0
 
-    
-    # def dothing(self, event):
-    #     if isinstance(event, QKeyEvent):  # as viewportEvent gets *all* events
-    #         print(event.key())
-    #         # if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
-    #             # copy the text from textEdit to textEdit_2
 
     def tray_tool_tip(self):
         if self.in_tray:
-            # string = "GBot" + "\n" + strftime("%Y.%m.%d.%H.%M:%S") + "\n" + str(self.task_count) + " task"
-            # if self.task_count != 1:
-            #     string += "s"
-
-            # string = "GBot" + " " + self.get_memory_usage() + "\n" + str(self.task_count) + " task"
             string = "GBot" + "\n" + str(self.task_count) + " task"
             if self.task_count != 1:
                 string += "s"
@@ -645,7 +532,6 @@ class GBot(QMainWindow):
     def to_tray(self):
 
         self.in_tray = True
-        
 
         self.hide()
         menu = QMenu()
@@ -666,6 +552,8 @@ class GBot(QMainWindow):
         self.was_tray = True
 
     def read_tasks(self):
+        self.path_mgmt(False)
+
         gbts1 = [x for x in self.gbts_dict2 if self.gbts_dict2[x] == 1]
         lines = []
         for gbt in gbts1:
@@ -680,9 +568,7 @@ class GBot(QMainWindow):
             self.scheds = [self.is_valid(x) for x in lines]
             self.scheds = [x.strip() for x in self.scheds if x != None]
             self.task_count = len(self.scheds)
-            # cpos = self.text_tasks.verticalScrollBar().value()
             self.text_tasks.setPlainText("\n".join(self.scheds))
-            # self.text_tasks.verticalScrollBar().setValue(cpos)
             
         self.prev_lines = jlines
 
@@ -715,12 +601,12 @@ class GBot(QMainWindow):
         self.select_history(update=True)
 
     def update_gbts(self):
+        self.path_mgmt(False)
         ld = os.listdir(self.gbt)
 
         dgbts = [x for x in self.gbts_dict if not x in ld]
 
         for d in dgbts:
-            # self.gbts = [x for x in self.gbts if x != d]
             self.gbts_dict[d].setParent(None)
             del self.gbts_dict[d]
             del self.gbts_dict2[d]
@@ -728,17 +614,15 @@ class GBot(QMainWindow):
         gbts_new = [x for x in ld if ".gbt" in x.lower() and not(x in self.gbts_dict)]
 
         for gbt_new in gbts_new:
-            # self.gbts += [gbt_new]
             self.gbts_dict[gbt_new] = QCheckBox(gbt_new,self)
             self.gbts_dict[gbt_new].setChecked(False)
             self.gbts_dict[gbt_new].stateChanged.connect(self.checked_gbt)
             self.chkBoxLayout.addWidget(self.gbts_dict[gbt_new])
             self.gbts_dict2[gbt_new] = 0
-
             self.gbts_dict[gbt_new].installEventFilter(self)
         
         self.widget.setLayout(self.grid)
-        # self.setCentralWidget(self.widget)
+
 
     def change_tray_icon(self,ico):
         self.tray.setIcon(ico)
@@ -763,21 +647,15 @@ class GBot(QMainWindow):
 
 
     def center(self):
-        # get the frame geometry
         qr = self.frameGeometry()
-        # locate the center of the screen
         cp = QDesktopWidget().availableGeometry().center()
-        # set the center of the frame to to the screen center
         qr.moveCenter(cp)
-        # move the top-left point of the application window to the top-left point of the qr rectangle
         self.move(qr.topLeft())
     
     def save_gbt(self):
         options = QFileDialog.Options()
-        # options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getSaveFileName(self,"Save",self.gbt,"Gbot Files (*.gbt);;All Files (*)", options=options)
         if fileName:
-            # print(fileName)
             with open(fileName,'w') as f:
                 f.write(self.text_editor.toPlainText())
 
@@ -803,8 +681,6 @@ class GBot(QMainWindow):
         self.log = ""
 
     def view_readme(self):
-        # with open(self.readme_path,'w') as f:
-        #     f.write(self.readme_contents)
         sp = Popen(["notepad.exe", self.readme_path], shell=True,stdin=None, stdout=None, stderr=None, close_fds=True)
 
     def copy_tasks(self):
@@ -826,7 +702,6 @@ class GBot(QMainWindow):
 
     def preferences(self):
         self.pref = GBot_Preferences()
-        # pref.exec_()
         self.pref.show()
 
     def build_menu(self):
@@ -836,7 +711,6 @@ class GBot(QMainWindow):
         fileMenu = menubar.addMenu('File')
         toolsMenu = menubar.addMenu('Tools')
         viewMenu = menubar.addMenu('View')
-        
 
         # file menu stuff
         self.prefAct = QAction('Preferences', self)      
@@ -929,7 +803,6 @@ class GBot(QMainWindow):
         import json
 
         if update:
-            # print("saved")
             with open(self.select_path, 'w') as f:
                 json.dump(self.gbts_dict2, f)
 
@@ -947,9 +820,6 @@ class GBot(QMainWindow):
 
             with open(self.select_path, 'w') as f:
                 json.dump(self.gbts_dict2, f)
-        # else:
-        #     with open(self.select_path, 'w') as f:
-        #         json.dump(self.gbts_dict2, f)
 
 
 
@@ -978,20 +848,20 @@ class GBot(QMainWindow):
             if 'gbt' in data.keys():
                 self.gbt = data['gbt']
             else:
-                self.gbt = self.root + "gbt\\"
+                self.gbt = self.appd + "gbt\\"
             if 'scripts' in data.keys():
                 self.scripts = data['scripts']
             else:
-                self.scipts = self.root + "scripts\\"
+                self.scipts = self.appd + "scripts\\"
             if 'output' in data.keys():
                 self.output = data['output']
             else:
-                self.output = self.root + "output\\"
+                self.output = self.appd + "output\\"
 
         else:
-            self.output = self.root + "output\\"
-            self.gbt = self.root + "gbt\\"
-            self.scripts = self.root + "scripts\\"
+            self.output = self.appd + "output\\"
+            self.gbt = self.appd + "gbt\\"
+            self.scripts = self.appd + "scripts\\"
 
             data = {}
             data['gbt'] = self.gbt
@@ -1019,7 +889,6 @@ class GBot(QMainWindow):
         try:
             self.tray.hide()
         except Exception as e:
-            # print(e)
             pass
         QCoreApplication.instance().quit()
 
@@ -1053,7 +922,6 @@ class FileEdit(QTextEdit):
         data = event.mimeData()
         urls = data.urls()
         if urls and urls[0].scheme() == 'file':
-            # for some reason, this doubles up the intro slash
             filepath = str(urls[0].path())[1:]
             if filepath.split(".")[-1].lower() in ["gbt","txt"]:
                 try:
@@ -1073,13 +941,9 @@ class GBot_Preferences(QWidget):
     def initUI(self):
 
         self.main_icon = gui.main_icon
-        # self.setFont(QFont('Arial', 10))
         self.setFont(gui.font())
         self.setWindowTitle('GBot Preferences') 
         self.setWindowIcon(self.main_icon)
-
-        # gui.fonts
-        # gui.font_choice       
 
         self.lbl1 = QLabel('gbt path:', self)
         self.lbl2 = QLabel('scripts path:', self)
@@ -1093,19 +957,15 @@ class GBot_Preferences(QWidget):
         self.line_output = QLineEdit()
         self.line_output.setText(gui.output)
 
-
         self.comboBox = QComboBox(self)
         for font in gui.fonts:
             self.comboBox.addItem(font)
-        # self.comboBox.activated[str].connect(self.format_choice)
         index = self.comboBox.findText(gui.font_choice, Qt.MatchFixedString)
         if index >= 0:
             self.comboBox.setCurrentIndex(index)
-        # self.comboBox.setToolTip('Select the format to convert to')
 
         self.btn = QPushButton('Save', self)
         self.btn.clicked.connect(self.save_prefs)
-        # self.btn.resize(self.btn.sizeHint())
         self.btn.setFixedSize(50,23)
 
         self.grid = QGridLayout()
@@ -1129,7 +989,6 @@ class GBot_Preferences(QWidget):
         self.show()
     
     def save_prefs(self):
-        # import os
 
         gbt = self.line_gbt.text()
         if gbt.strip() == "":
@@ -1148,8 +1007,7 @@ class GBot_Preferences(QWidget):
 
         gui.font_choice = self.comboBox.currentText()
         gui.update_font(update=True)
-        
-        # self.done(0)
+
         gui.path_mgmt(update=True)
         gui.change_status("Updated preferences")
         self.close()
@@ -1166,7 +1024,6 @@ class GBot_Message(QWidget):
     def initUI(self):
 
         self.main_icon = gui.main_icon
-        # self.setFont(QFont('Arial', 10))
         self.setFont(gui.font())
         self.setWindowTitle('GBot Message') 
         self.setWindowIcon(self.main_icon)
